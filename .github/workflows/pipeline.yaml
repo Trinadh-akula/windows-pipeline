@@ -25,7 +25,7 @@ jobs:
       - name: build with Devenv
         run: |
           cd "D:\a\windows-pipeline\windows-pipeline"
-          DevEnv ./WPFUI/WPFUI.sln /t:Build /p:Configuration=Release
+          DevEnv ./WPFUI/WPFUI.sln /Build Release
 
       - name: Disable Out of Process Building
         run: .\DisableOutOfProcBuild.exe
