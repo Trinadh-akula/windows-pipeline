@@ -22,11 +22,6 @@ jobs:
       - name: Setup VS Dev Environment
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
 
-      - name: build with Devenv
-        run: |
-          cd "D:\a\windows-pipeline\windows-pipeline\WPFUI"
-          DevEnv WPFUI.sln /Build Release
-
       - name: Disable Out of Process Building
         run: .\DisableOutOfProcBuild.exe
         working-directory: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VSI\DisableOutOfProcBuild
