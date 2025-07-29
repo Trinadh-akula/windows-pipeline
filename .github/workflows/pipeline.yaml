@@ -1,0 +1,50 @@
+name: Windows dev actions
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Cloning code
+        uses: actions/checkout@v4
+        with:
+          ref: 'main'
+
+      - name: Add msbuild to path
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore package
+        run: |
+          dotnet restore ./MovableApp/MovableApp/MovableApp.csproj /p:PublishReadyToRun=true
+
+      - name: build with msbuild
+        run: |
+          cd "D:\a\windows-app\windows-app\MovableApp"
+          msbuild MovableApp.sln /t:Build /p:Configuration=Release
+
+      - name: Setup VS Dev Environment
+        uses: seanmiddleditch/gha-setup-vsdevenv@v4
+
+      - name: Disable Out of Process Building
+        run: .\DisableOutOfProcBuild.exe
+        working-directory: C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VSI\DisableOutOfProcBuild
+
+      - name: Build with devenv.com
+        run: |
+          cd "D:\a\windows-app\windows-app\MovableApp\SNAPxr\"
+          New-Item -Path "D:\a\windows-app\windows-app\MovableApp\SNAPxr\Release" -ItemType Directory
+          cd "D:\a\windows-app\windows-app\MovableApp"
+          DevEnv MovableApp.sln /Build Release
+          dir "D:\a\windows-app\windows-app\MovableApp\SNAPxr\Debug"
+          dir "D:\a\windows-app\windows-app\MovableApp\SNAPxr\Release"
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows build
+          path: D:\a\windows-app\windows-app\MovableApp\SNAPxr\Release\SNAPxr.msi
