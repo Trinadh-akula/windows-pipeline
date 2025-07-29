@@ -15,20 +15,17 @@ jobs:
         with:
           ref: 'main'
 
-      - name: Add msbuild to path
-        uses: microsoft/setup-msbuild@v2
-
       - name: Restore package
         run: |
-          dotnet restore ./MovableApp/MovableApp/MovableApp.csproj /p:PublishReadyToRun=true
-
-      - name: build with msbuild
-        run: |
-          cd "D:\a\windows-app\windows-app\MovableApp"
-          msbuild MovableApp.sln /t:Build /p:Configuration=Release
+          dotnet restore ./WPFUI/WPFUI.csproj /p:PublishReadyToRun=true
 
       - name: Setup VS Dev Environment
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
+
+      - name: build with Devenv
+        run: |
+          cd "D:\a\windows-pipeline\windows-pipeline"
+          DevEnv ./WPFUI/WPFUI.sln /t:Build /p:Configuration=Release
 
       - name: Disable Out of Process Building
         run: .\DisableOutOfProcBuild.exe
@@ -36,12 +33,9 @@ jobs:
 
       - name: Build with devenv.com
         run: |
-          cd "D:\a\windows-app\windows-app\MovableApp\SNAPxr\"
-          New-Item -Path "D:\a\windows-app\windows-app\MovableApp\SNAPxr\Release" -ItemType Directory
-          cd "D:\a\windows-app\windows-app\MovableApp"
-          DevEnv MovableApp.sln /Build Release
-          dir "D:\a\windows-app\windows-app\MovableApp\SNAPxr\Debug"
-          dir "D:\a\windows-app\windows-app\MovableApp\SNAPxr\Release"
+          cd "D:\a\windows-pipeline\windows-pipeline\WPFUISetup"
+          DevEnv WPFUISetup.vdproj /Build Release
+          dir "D:\a\windows-pipeline\windows-pipeline\WPFUISetup\Release"
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
