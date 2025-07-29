@@ -19,6 +19,11 @@ jobs:
         run: |
           dotnet restore ./WPFUI/WPFUI.csproj /p:PublishReadyToRun=true
 
+      - name: build with Devenv
+        run: |
+          cd "D:\a\windows-pipeline\windows-pipeline"
+          msbuild ./WPFUI/WPFUI.sln /t:Build /p:Configuration=Release
+
       - name: Setup VS Dev Environment
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
 
